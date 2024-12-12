@@ -3,6 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import DashboardLayout from './layouts/DashboardLayout';
 import Dashboard from './pages/Dashboard';
+import AmenitiesPage from './pages/AmenitiesPage';
 
 const theme = createTheme({
   palette: {
@@ -24,14 +25,6 @@ const theme = createTheme({
     },
   },
 });
-
-// Placeholder component for the Amenities page
-const AmenitiesPage = () => (
-  <div>
-    <h1>Amenities Management</h1>
-    <p>This page will contain amenities availability management features.</p>
-  </div>
-);
 
 function App() {
   return (
