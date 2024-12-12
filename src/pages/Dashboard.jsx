@@ -6,31 +6,31 @@ function Dashboard() {
     {
       title: 'SVG Mapper',
       description: 'Create and manage interactive SVG maps with our mapping tool.',
-      url: '#', // Replace with actual URL
+      url: 'https://svg-mapper.pravaah.xyz',
       isExternal: true
     },
     {
       title: 'SVG Creator',
       description: 'Design and generate custom SVG elements for your projects.',
-      url: '#', // Replace with actual URL
+      url: 'https://svg-creator-pi.vercel.app',
       isExternal: true
     },
     {
       title: '3D Mapper',
       description: 'Create and manipulate 3D maps and models.',
-      url: '#', // Replace with actual URL
+      url: 'https://3d-mapper.pravaah.xyz',
       isExternal: true
     },
     {
       title: 'Database Entry',
       description: 'Manage and edit database records through a user-friendly interface.',
-      url: '#', // Replace with actual URL
+      url: 'https://db.pravaah.xyz',
       isExternal: true
     },
     {
       title: 'API Backend',
       description: 'Monitor and control API services and endpoints.',
-      url: '#', // Replace with actual URL
+      url: 'https://api.pravaah.xyz',
       isExternal: true
     },
     {

@@ -12,11 +12,12 @@ import {
   FormControlLabel,
   Alert,
   CircularProgress,
+  Divider,
 } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
-// Base API URL - replace with your actual API base URL
-const API_BASE_URL = 'https://api.pravaah.xyz'; // or your actual API URL
+// Base API URL
+const API_BASE_URL = 'https://api.pravaah.xyz';
 
 function AmenitiesPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -130,100 +131,128 @@ function AmenitiesPage() {
   };
 
   return (
-    <Box sx={{ maxWidth: 800, mx: 'auto', p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Amenities Management
-      </Typography>
-      
-      {/* Search Section */}
-      <Paper sx={{ p: 3, mb: 3 }}>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <TextField
-            fullWidth
-            label="Search Station"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-            placeholder="Enter station name"
-            error={!!error}
-          />
-          <Button
-            variant="contained"
-            onClick={handleSearch}
-            startIcon={<SearchIcon />}
-            disabled={loading || !searchTerm.trim()}
+    <Box sx={{ 
+      display: 'flex', 
+      minHeight: 'calc(100vh - 100px)',
+      gap: 3,
+      p: 3,
+    }}>
+      {/* Left Side - Search Section */}
+      <Paper sx={{ 
+        width: '300px',
+        p: 3,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+      }}>
+        <Typography variant="h6" gutterBottom>
+          Search Station
+        </Typography>
+        
+        <TextField
+          fullWidth
+          label="Station Name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          placeholder="Enter station name"
+          error={!!error}
+          size="small"
+        />
+        
+        <Button
+          variant="contained"
+          onClick={handleSearch}
+          startIcon={<SearchIcon />}
+          disabled={loading || !searchTerm.trim()}
+        >
+          Search
+        </Button>
+
+        {loading && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+            <CircularProgress size={24} />
+          </Box>
+        )}
+        
+        {error && (
+          <Alert severity="error" onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+
+        {updateStatus && (
+          <Alert 
+            severity={updateStatus.type}
+            onClose={() => setUpdateStatus(null)}
           >
-            Search
-          </Button>
-        </Box>
+            {updateStatus.message}
+          </Alert>
+        )}
       </Paper>
 
-      {/* Status Messages */}
-      {loading && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
-          <CircularProgress />
-        </Box>
-      )}
-      
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
+      {/* Right Side - Results Section */}
+      <Paper sx={{ 
+        flex: 1,
+        p: 3,
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100%',
+      }}>
+        <Typography variant="h6" gutterBottom>
+          {stationData ? `Amenities - ${stationData.name}` : 'No Station Selected'}
+        </Typography>
 
-      {updateStatus && (
-        <Alert 
-          severity={updateStatus.type} 
-          sx={{ mb: 3 }}
-          onClose={() => setUpdateStatus(null)}
-        >
-          {updateStatus.message}
-        </Alert>
-      )}
+        {stationData ? (
+          <>
+            <List sx={{ flex: 1 }}>
+              {getAmenities().map((amenity) => (
+                <ListItem
+                  key={amenity.id}
+                  divider
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    py: 2,
+                  }}
+                >
+                  <ListItemText
+                    primary={amenity.objectName.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                    secondary={`ID: ${amenity.id}`}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={amenity.visible}
+                        onChange={() => handleVisibilityToggle(amenity.id, amenity.visible)}
+                        color="primary"
+                      />
+                    }
+                    label={amenity.visible ? 'Visible' : 'Hidden'}
+                  />
+                </ListItem>
+              ))}
 
-      {/* Amenities List */}
-      {stationData && (
-        <Paper sx={{ p: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Station: {stationData.name}
-          </Typography>
-          
-          <List>
-            {getAmenities().map((amenity) => (
-              <ListItem
-                key={amenity.id}
-                divider
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  py: 2,
-                }}
-              >
-                <ListItemText
-                  primary={amenity.objectName.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                  secondary={`ID: ${amenity.id}`}
-                />
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={amenity.visible}
-                      onChange={() => handleVisibilityToggle(amenity.id, amenity.visible)}
-                      color="primary"
-                    />
-                  }
-                  label={amenity.visible ? 'Visible' : 'Hidden'}
-                />
-              </ListItem>
-            ))}
-          </List>
-
-          {getAmenities().length === 0 && (
-            <Typography color="text.secondary" sx={{ textAlign: 'center', py: 3 }}>
-              No amenities found for this station
+              {getAmenities().length === 0 && (
+                <Typography color="text.secondary" sx={{ textAlign: 'center', py: 3 }}>
+                  No amenities found for this station
+                </Typography>
+              )}
+            </List>
+          </>
+        ) : (
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            flex: 1,
+          }}>
+            <Typography color="text.secondary">
+              Search for a station to view and manage its amenities
             </Typography>
-          )}
-        </Paper>
-      )}
+          </Box>
+        )}
+      </Paper>
     </Box>
   );
 }
