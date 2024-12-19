@@ -12,7 +12,7 @@ function Dashboard() {
     {
       title: 'SVG Creator',
       description: 'Design and generate custom SVG elements for your projects.',
-      url: 'https://svg-creator-pi.vercel.app',
+      url: 'https://svg-creator.pravaah.xyz',
       isExternal: true
     },
     {
